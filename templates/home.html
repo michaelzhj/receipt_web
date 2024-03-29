@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe Search{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Search for a Recipe</h1>
+    <form action="/search" method="post">
+        Recipe Name: <input type="text" name="recipe_name">
+        <input type="submit" value="Search">
+    </form>
+</body>
+{% endblock %}
