@@ -2,10 +2,11 @@
 {% block title %}Login Page{% endblock %}
 
 {% block content %}
-<form action="#" method="post">
-	<p>Name:</p>
-	<p><input type="text" name="nm" /></p>
-	<p><input type="submit" value="submit"/></p>
+<form action="/" method="post">
+	<p>Email:</p>
+	<p><input type="text" name="email" /></p>
+	<input type="hidden" name="type" value="email" />
+	<p><input type="submit" value="Login"/></p>
 </form>
 {% endblock %}
 
