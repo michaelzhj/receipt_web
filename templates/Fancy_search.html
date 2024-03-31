@@ -1,5 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Home Page{% endblock %}
+{% block title %}Fancy_search{% endblock %}
 {% block content %}
-<h1>Fancy_search </h1>
+<body>
+    <h1>Search Recipes by Ingredients or Cooking Tools</h1>
+    <form action="/search" method="post">
+        <input type="text" name="query" placeholder="Enter ingredients or tools">
+        <input type="submit" value="Search">
+    </form>
+    <h1>Search Results</h1>
+    {% for recipe in recipes %}
+        <div>
+            <h2>Name: {{ recipe['recipe_name'] }}</h2>
+            <p>Author: {{ recipe['author_id'] }}</p>
+            <p>Cooking Time: {{ recipe['cooking_time'] }}</p>
+            <p>Cooking Difficulty: {{ recipe['cooking_difficulty'] }}</p>
+            <p>Descriptions: {{ recipe['descriptions'] }}</p>
+        </div>
+    {% else %}
+        <p>No recipes found.</p>
+    {% endfor %}
+</body>
+
+
 {% endblock %}
