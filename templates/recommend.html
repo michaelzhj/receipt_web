@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe Search{% endblock %}
+
+{% block content %}
+<body>
+    {% if recipes %}
+        <ul>
+        {% for result in recipes %}
+            <li>
+                <h2>Name: {{ result['recipe_name'] }}</h2>
+                <p>Author: {{ result['author_id'] }}</p>
+                <p>Cooking Time: {{ result['cooking_time'] }}</p>
+                <p>Cooking Difficulty: {{ result['cooking_difficulty'] }}</p>
+                <p>Descriptions: {{ result['descriptions'] }}</p>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</body>
+{% endblock %}
