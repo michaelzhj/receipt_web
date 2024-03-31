@@ -26,5 +26,23 @@
     {% else %}
         <p>No results found.</p>
     {% endif %}
+    <h2>Submit a New Recipe</h2>
+    <form action="/" method="post">
+        <p>Recipe Name: <input type="text" name="recipe_name" required></p>
+        <p>Cooking Time (mins): <input type="number" name="cooking_time" min="1" required></p>
+        <p>Cooking Difficulty: 
+            <select name="cooking_difficulty" required>
+                <option value="1">Easy</option>
+                <option value="2">Easy-lv2</option>
+                <option value="3">Medium-lv1</option>
+                <option value="4">Medium-lv2</option>
+                <option value="5">Hard</option>
+            </select>
+        </p>
+        <p>Descriptions: <textarea name="descriptions" required></textarea></p>
+        <input type="hidden" name="type" value="upload" />
+        <input type="submit" value="Submit Recipe">
+    </form>
+
 </body>
 {% endblock %}
