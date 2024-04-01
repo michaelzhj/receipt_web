@@ -106,5 +106,25 @@
     {% else %}
         <p>No results found.</p>
     {% endif %}
+
+    <h1>My Recipe Lists</h1>
+    {% if recipe_lists %}
+        <ul>
+        {% for list in recipe_lists %}
+            <h2>{{list['rl_name']}}</h2> 
+            {% for result in list['recipes'] %}
+                <li>
+                    <h2>Name: {{ result['recipe_name'] }}</h2>
+                    <p>Author: {{ result['author_id'] }}</p>
+                    <p>Cooking Time: {{ result['cooking_time'] }}</p>
+                    <p>Cooking Difficulty: {{ result['cooking_difficulty'] }}</p>
+                    <p>Descriptions: {{ result['descriptions'] }}</p>
+                </li>
+            {% endfor %}   
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
 </body>
 {% endblock %}

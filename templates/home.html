@@ -25,11 +25,20 @@
                 <p>Cooking Time: {{ result['cooking_time'] }}</p>
                 <p>Cooking Difficulty: {{ result['cooking_difficulty'] }}</p>
                 <p>Descriptions: {{ result['descriptions'] }}</p>
-                <form action="/" method="post">
-                    <input type="hidden" name="recipe_id" value="{{ result['recipe_id'] }}">
-                    <input type="hidden" name="type" value="add">
-                    <input type="submit" value="add">
-                </form>
+                {% if recipe_lists %}
+                    <form action="/" method="post">
+                        <p>My list: 
+                            <select name="recipe_list" required>
+                                {% for rl in recipe_lists %}
+                                    <option value="{{rl}}">{{rl}}</option>
+                                {% endfor %} 
+                            </select>
+                        </p >
+                        <input type="hidden" name="recipe_id" value="{{ result['recipe_id'] }}">
+                        <input type="hidden" name="type" value="add">
+                        <input type="submit" value="add">
+                    </form>
+                {% endif %}
                 <form action="/" method="post">
                     <p>Rate: 
                         <select name="rate" required>
