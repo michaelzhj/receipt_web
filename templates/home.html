@@ -30,6 +30,7 @@
                     <input type="hidden" name="type" value="add">
                     <input type="submit" value="add">
                 </form>
+                <form action="/" method="post">
                     <p>Rate: 
                         <select name="rate" required>
                             <option value="1">1</option>
@@ -38,11 +39,12 @@
                             <option value="4">4</option>
                             <option value="5">5</option>
                         </select>
-                    </p>
+                    </p >
                     <input type="hidden" name="recipe_id" value="{{ result['recipe_id'] }}"/>
                     <input type="hidden" name="type" value="rate" />
                     <input type="submit" value="Rate">
                 </form>
+
                 
                 
             </li>
