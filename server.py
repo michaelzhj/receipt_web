@@ -93,6 +93,7 @@ def teardown_request(exception):
 @app.route('/', methods=["POST", "GET"])
 def home():
     recipes = []
+    
     if request.method == "POST":
         #rint(request.form["type"] )
         if request.form["type"] == 'email':
@@ -147,30 +148,32 @@ def home():
                 g.conn.execute(sql_command, params)
                 g.conn.commit()
         elif request.form["type"] == 'add':
-            print("here ")
-            recipe_list = []
-            # Corrected the SQL command and added a placeholder for the parameter.
-            sql_command = text("""
-            SELECT rl_name FROM Recipe_lists WHERE user_id = :user_id
-            """)
-            cursor = g.conn.execute(sql_command, {'user_id': session['id']})
-            print(session['id'])
-            for row in cursor:
-                recipe_list.append(row[0])  # Assuming 'rl_name' is the column name you're interested in.
-            cursor.close()  # Close the cursor after use.
-            
-            #print(recipe_list)
-            if len(recipe_list)==0:
-                return "you don't have recipe_list "
-            else:
-                recipe_list_contain = {"user_id":session['id'],"rl_name":recipe_list[0],"recipe_id":request.form["recipe_id"]}
+            if session.get('id', '') != '':
+                rl_name = request.form["recipe_list"]
+                print("name is",rl_name)
+                # recipe_list = []
+                # # Corrected the SQL command and added a placeholder for the parameter.
+                # sql_command = text("""
+                # SELECT rl_name FROM Recipe_lists WHERE user_id = :user_id
+                # """)
+                # cursor = g.conn.execute(sql_command, {'user_id': session['id']})
+                # print(session['id'])
+                # for row in cursor:
+                #     recipe_list.append(row[0])  # Assuming 'rl_name' is the column name you're interested in.
+                # cursor.close()  # Close the cursor after use.
+                
+                # #print(recipe_list)
+                # if len(recipe_list)==0:
+                #     return "you don't have recipe_list "
+                # else:
+                recipe_list_contain = {"user_id":session['id'],"rl_name":rl_name,"recipe_id":request.form["recipe_id"]}
                 print(recipe_list_contain)
                 sql_command = text("""
-            INSERT INTO recipe_rl_include(user_id,rl_name,recipe_id) VALUES(:user_id,:rl_name,:recipe_id)
-            """)
-            cursor = g.conn.execute(sql_command,recipe_list_contain)
-            g.conn.commit()
-            cursor.close()
+                INSERT INTO recipe_rl_include(user_id,rl_name,recipe_id) VALUES(:user_id,:rl_name,:recipe_id)
+                """)
+                cursor = g.conn.execute(sql_command,recipe_list_contain)
+                g.conn.commit()
+                cursor.close()
     
         elif request.form["type"] == 'rate':
             user_id = session.get('id', '')
@@ -220,7 +223,15 @@ def home():
                     g.conn.commit()
     
     user = session.get('user_email', '')
-    return render_template("home.html", user_name = user, recipes = recipes)
+    id = session.get('id', '')
+    recipe_lists = []
+    if user != '':
+        select_query = "select rl_name from Recipe_lists where user_id = :user_id"
+        cursor = g.conn.execute(text(select_query),{'user_id': id})
+        recipe_lists  = [res[0] for res in cursor]
+        cursor.close()
+
+    return render_template("home.html", user_name = user, recipes = recipes, recipe_lists = recipe_lists)
 
 from flask import request, g
 from sqlalchemy import text
@@ -426,7 +437,7 @@ def profile():
             id = session.get('id', '')
             I_name = request.form["I_name"]
 
-            select_query = "SELECT * from relationship where user_id = :user_id and I_name = :I_name and action = 'like'"
+            select_query = "SELECT * from relationship where user_id = :user_id and I_name = :I_name"
             cursor = g.conn.execute(text(select_query), {'user_id':id, 'I_name':I_name})
             results = cursor.fetchall() 
             length = len(results)
@@ -450,7 +461,7 @@ def profile():
             id = session.get('id', '')
             I_name = request.form["I_name"]
 
-            select_query = "SELECT * from relationship where user_id = :user_id and I_name = :I_name and action = 'dislike'"
+            select_query = "SELECT * from relationship where user_id = :user_id and I_name = :I_name"
             cursor = g.conn.execute(text(select_query), {'user_id':id, 'I_name':I_name})
             results = cursor.fetchall() 
             length = len(results)
@@ -502,6 +513,7 @@ def profile():
     followers = []
     followees = []
     rates = []
+    recipe_lists = []
     if id != '':
         select_query = '''  select *
                             from
@@ -583,9 +595,47 @@ def profile():
             rates.append({'name':result[0], 'score':result[1]})
         cursor.close()
 
-    user = session.get('user_email', '')
-    return  render_template("profile.html", user_name = user, recipes = recipes, ingredients_like=ingredients_like, ingredients_dislike = ingredients_dislike, tools =tools, followers = followers, followees = followees,rates=rates)
+        select_query = '''  select rl_name
+                            from
+                            Recipe_lists
+                            where user_id = :user_id
+                            '''
+        cursor = g.conn.execute(text(select_query),{'user_id': id})
+        results = [res[0] for res in cursor]
+        cursor.close()
+        for result in results:
+            rl_name = result
+            query = ''' select Recipes.*
+                        from
+                        Recipes
+                        join
+                        (select rl_name, recipe_id
+                        from
+                        recipe_rl_include 
+                        where user_id = :user_id
+                        and rl_name = :rl_name) R
+                        on Recipes.recipe_id = R.recipe_id
+                    '''
+            cursor = g.conn.execute(text(query),{'user_id': id, 'rl_name':rl_name})
+            recipes_in_list = []
+            for result in cursor:
+                dict_l = {'recipe_id':result[0], 'recipe_name':result[1], 'cooking_time':result[2], 'cooking_difficulty':result[3], 'descriptions':result[4], 'author_id':result[5]}
+                recipes_in_list.append(dict_l)
+            dict_ = {'rl_name':rl_name, 'recipes':recipes_in_list}
+            recipe_lists.append(dict_)   
+            cursor.close()  
 
+    user = session.get('user_email', '')
+    return  render_template("profile.html", 
+                            user_name = user, 
+                            recipes = recipes, 
+                            ingredients_like=ingredients_like, 
+                            ingredients_dislike = ingredients_dislike, 
+                            tools =tools, 
+                            followers = followers, 
+                            followees = followees,
+                            rates=rates,
+                            recipe_lists = recipe_lists)
 if __name__ == "__main__":
 	import click
 
