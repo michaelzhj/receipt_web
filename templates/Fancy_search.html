@@ -4,7 +4,8 @@
 <body>
     <h1>Search Recipes by Ingredients or Cooking Tools</h1>
     <form action="/search" method="post">
-        <input type="text" name="query" placeholder="Enter ingredients or tools">
+        <input type="text" name="ingredients" placeholder="Enter ingredients(use comma to separate)">
+        <input type="text" name="tools" placeholder="Enter tools(use comma to separate)">
         <input type="hidden" name="type" value="search" />
         <input type="submit" value="Search">
     </form>

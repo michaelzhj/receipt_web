@@ -95,5 +95,16 @@
     {% else %}
         <p>No results found.</p>
     {% endif %}
+
+    <h1>My Rates</h1>
+    {% if rates %}
+        <ul>
+        {% for result in rates %}
+            <p>You rated {{ result['name'] }} score {{result['score']}}</p> 
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
 </body>
 {% endblock %}
