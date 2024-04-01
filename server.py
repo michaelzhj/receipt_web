@@ -587,5 +587,5 @@ def profile():
     return  render_template("profile.html", user_name = user, recipes = recipes, ingredients_like=ingredients_like, ingredients_dislike = ingredients_dislike, tools =tools, followers = followers, followees = followees,rates=rates)
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run()
 
