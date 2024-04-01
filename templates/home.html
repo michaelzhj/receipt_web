@@ -20,6 +20,11 @@
                 <p>Cooking Time: {{ result['cooking_time'] }}</p>
                 <p>Cooking Difficulty: {{ result['cooking_difficulty'] }}</p>
                 <p>Descriptions: {{ result['descriptions'] }}</p>
+                <form action="/" method="post">
+                    <input type="hidden" name="recipe_id" value="{{ result['recipe_id'] }}">
+                    <input type="hidden" name="type" value="add">
+                    <input type="submit" value="add">
+                </form>
             </li>
         {% endfor %}
         </ul>
