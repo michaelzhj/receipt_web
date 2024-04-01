@@ -5,6 +5,7 @@
     <h1>Search Recipes by Ingredients or Cooking Tools</h1>
     <form action="/search" method="post">
         <input type="text" name="query" placeholder="Enter ingredients or tools">
+        <input type="hidden" name="type" value="search" />
         <input type="submit" value="Search">
     </form>
     <h1>Search Results</h1>
@@ -12,6 +13,11 @@
         <div>
             <h2>Name: {{ recipe['recipe_name'] }}</h2>
             <p>Author: {{ recipe['author_id'] }}</p>
+            <form action="/search" method="post">
+                <input type="hidden" name="author_id" value="{{ recipe['author_id'] }}"/>
+                <input type="hidden" name="type" value="follow" />
+                <input type="submit" value="Follow this author">
+            </form>
             <p>Cooking Time: {{ recipe['cooking_time'] }}</p>
             <p>Cooking Difficulty: {{ recipe['cooking_difficulty'] }}</p>
             <p>Descriptions: {{ recipe['descriptions'] }}</p>

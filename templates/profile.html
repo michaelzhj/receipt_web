@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Recipe Search{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
 <body>
+    <h1>My recipes</h1>
     {% if recipes %}
         <ul>
         {% for result in recipes %}
@@ -19,6 +20,76 @@
                     <input type="submit" value="Delete">
                 </form>
             </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    <h1>Ingredients I like</h1>
+    <form action="/profile" method="post">
+        <p>Ingredient Name: <input type="text" name="I_name" required></p>
+        <input type="hidden" name="type" value="add_ingredient_like" />
+        <input type="submit" value="Add">
+    </form>
+    {% if ingredients_like %}
+        <ul>
+        {% for result in ingredients_like %}
+            <p>{{ result }}</p> 
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+
+
+    <h1>Ingredients I dislike</h1>
+    <form action="/profile" method="post">
+        <p>Ingredient Name: <input type="text" name="I_name" required></p>
+        <input type="hidden" name="type" value="add_ingredient_dislike" />
+        <input type="submit" value="Add">
+    </form>
+    {% if ingredients_dislike %}
+        <ul>
+        {% for result in ingredients_dislike %}
+            <p>{{ result }}</p> 
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+
+
+    <h1>Cooking tools I have</h1>
+    <form action="/profile" method="post">
+        <p>Tool Name: <input type="text" name="tool" required></p>
+        <input type="hidden" name="type" value="add_tool" />
+        <input type="submit" value="Add">
+    </form>
+    {% if tools %}
+        <ul>
+        {% for result in tools %}  
+            <p>{{ result }}</p>  
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+
+    <h1>Who I am following</h1>
+    {% if followees %}
+        <ul>
+        {% for result in followees %}
+            <p>{{ result }}</p> 
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    <h1>Who follows me</h1>
+    {% if followers %}
+        <ul>
+        {% for result in followers %}
+            <p>{{ result }}</p> 
         {% endfor %}
         </ul>
     {% else %}
