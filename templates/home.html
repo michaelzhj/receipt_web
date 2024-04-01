@@ -17,6 +17,11 @@
             <li>
                 <h2>Name: {{ result['recipe_name'] }}</h2>
                 <p>Author: {{ result['author_id'] }}</p>
+                <form action="/" method="post">
+                    <input type="hidden" name="author_id" value="{{ result['author_id'] }}"/>
+                    <input type="hidden" name="type" value="follow" />
+                    <input type="submit" value="Follow this author">
+                </form>
                 <p>Cooking Time: {{ result['cooking_time'] }}</p>
                 <p>Cooking Difficulty: {{ result['cooking_difficulty'] }}</p>
                 <p>Descriptions: {{ result['descriptions'] }}</p>
@@ -25,6 +30,21 @@
                     <input type="hidden" name="type" value="add">
                     <input type="submit" value="add">
                 </form>
+                    <p>Rate: 
+                        <select name="rate" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </p>
+                    <input type="hidden" name="recipe_id" value="{{ result['recipe_id'] }}"/>
+                    <input type="hidden" name="type" value="rate" />
+                    <input type="submit" value="Rate">
+                </form>
+                
+                
             </li>
         {% endfor %}
         </ul>
