@@ -151,29 +151,21 @@ def home():
             if session.get('id', '') != '':
                 rl_name = request.form["recipe_list"]
                 print("name is",rl_name)
-                # recipe_list = []
-                # # Corrected the SQL command and added a placeholder for the parameter.
-                # sql_command = text("""
-                # SELECT rl_name FROM Recipe_lists WHERE user_id = :user_id
-                # """)
-                # cursor = g.conn.execute(sql_command, {'user_id': session['id']})
-                # print(session['id'])
-                # for row in cursor:
-                #     recipe_list.append(row[0])  # Assuming 'rl_name' is the column name you're interested in.
-                # cursor.close()  # Close the cursor after use.
-                
-                # #print(recipe_list)
-                # if len(recipe_list)==0:
-                #     return "you don't have recipe_list "
-                # else:
+
                 recipe_list_contain = {"user_id":session['id'],"rl_name":rl_name,"recipe_id":request.form["recipe_id"]}
-                print(recipe_list_contain)
-                sql_command = text("""
-                INSERT INTO recipe_rl_include(user_id,rl_name,recipe_id) VALUES(:user_id,:rl_name,:recipe_id)
-                """)
-                cursor = g.conn.execute(sql_command,recipe_list_contain)
-                g.conn.commit()
-                cursor.close()
+
+
+                query = "select recipe_id from recipe_rl_include where rl_name = :rl_name and user_id = :user_id and recipe_id = :recipe_id"
+                cursor = g.conn.execute(text(query),recipe_list_contain)
+                length = len([res for res in cursor])
+                if length == 0:
+                    print(recipe_list_contain)
+                    sql_command = text("""
+                    INSERT INTO recipe_rl_include(user_id,rl_name,recipe_id) VALUES(:user_id,:rl_name,:recipe_id)
+                    """)
+                    cursor = g.conn.execute(sql_command,recipe_list_contain)
+                    g.conn.commit()
+                    cursor.close()
     
         elif request.form["type"] == 'rate':
             user_id = session.get('id', '')
